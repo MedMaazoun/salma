@@ -86,16 +86,28 @@ function ScenarioCard({
       </div>
 
       <div className="text-xs text-slate-400">
-        <div className="flex justify-between">
-          <span>Durée</span>
-          <span className="text-brand-300">{s.duration_days} j</span>
+        <div className="flex justify-between mb-1">
+          <span>Durée de séjour simulée</span>
         </div>
-        <input
-          type="range" min={1} max={14} step={1}
+        <select
           value={s.duration_days}
           onChange={(e) => onChange({ ...s, duration_days: Number(e.target.value) })}
-          className="w-full accent-brand-400"
-        />
+          className="w-full bg-slate-900/70 border border-slate-700/70 rounded-lg px-2 py-1.5 text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500/50"
+        >
+          {[
+            { value: 1,  label: "1 jour" },
+            { value: 2,  label: "2 jours" },
+            { value: 3,  label: "3 jours" },
+            { value: 5,  label: "5 jours" },
+            { value: 7,  label: "7 jours (1 semaine)" },
+            { value: 14, label: "14 jours (2 semaines)" },
+            { value: 30, label: "30 jours (1 mois)" },
+          ].map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );
@@ -174,7 +186,7 @@ function ComparisonChart({ result }: { result: MCResponse }) {
   );
 }
 
-export function Simulation() {
+export function Simulation({ hideTwinButton = false }: { hideTwinButton?: boolean }) {
   const [mode, setMode] = useState<"mc" | "twin">("mc");
   const [scenarios, setScenarios] = useState<ScenarioInput[]>([
     emptyScenario(0),
@@ -226,16 +238,18 @@ export function Simulation() {
         >
           📊 Monte Carlo
         </button>
-        <button
-          onClick={() => setMode("twin")}
-          className={`px-3 py-1.5 rounded-lg text-sm border transition ${
-            mode === "twin"
-              ? "bg-brand-500/20 border-brand-400 text-brand-300"
-              : "border-slate-700 text-slate-400 hover:bg-slate-800/60"
-          }`}
-        >
-          🏥 Jumeau Numérique 3D
-        </button>
+        {!hideTwinButton && (
+          <button
+            onClick={() => setMode("twin")}
+            className={`px-3 py-1.5 rounded-lg text-sm border transition ${
+              mode === "twin"
+                ? "bg-brand-500/20 border-brand-400 text-brand-300"
+                : "border-slate-700 text-slate-400 hover:bg-slate-800/60"
+            }`}
+          >
+            🏥 Jumeau Numérique 3D
+          </button>
+        )}
       </div>
 
       {mode === "twin" ? (

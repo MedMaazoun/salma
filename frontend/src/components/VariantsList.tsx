@@ -1,14 +1,23 @@
 import type { Variant } from "../api";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
+import { useDrillDown } from "../DrillDownContext";
 
 export function VariantsList({ data }: { data: Variant[] }) {
+  const { open } = useDrillDown();
   const max = Math.max(1, ...data.map((d) => d.count));
   return (
     <div className="space-y-2">
       {data.map((v, i) => (
-        <div key={i} className="rounded-xl border border-slate-800/70 bg-slate-900/30 p-3">
+        <button
+          key={i}
+          onClick={() => open({ kind: "variant", sequence: v.sequence })}
+          className="group w-full text-left rounded-xl border border-slate-800/70 bg-slate-900/30 p-3 hover:border-brand-500/40 hover:bg-slate-900/50 transition cursor-pointer"
+        >
           <div className="flex items-center justify-between mb-2">
-            <div className="text-xs text-slate-400">Variante #{i + 1}</div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">Variante #{i + 1}</span>
+              <Search size={11} className="text-slate-700 group-hover:text-brand-400 transition" />
+            </div>
             <div className="text-sm font-medium text-slate-200">
               {v.count.toLocaleString("fr-FR")}{" "}
               <span className="text-slate-500">({v.pct}%)</span>
@@ -32,7 +41,10 @@ export function VariantsList({ data }: { data: Variant[] }) {
               </span>
             ))}
           </div>
-        </div>
+          <div className="mt-2 text-[10px] text-slate-600 group-hover:text-brand-300 transition">
+            Cliquer pour voir les patients de ce parcours →
+          </div>
+        </button>
       ))}
     </div>
   );

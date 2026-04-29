@@ -1,0 +1,198 @@
+<mxfile host="app.diagrams.net" modified="2026-04-29T18:30:00.000Z" agent="ED-Flow" version="21.0.0" type="device">
+  <diagram name="API Endpoints" id="api-endpoints-v2">
+    <mxGraphModel dx="1700" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITRE -->
+        <mxCell id="t1" value="Cartographie des 32 endpoints REST" style="text;html=1;align=center;fontSize=22;fontStyle=1;fontColor=#1e293b;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="1254" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="Backend FastAPI · base URL http://localhost:8000 · CORS limité à localhost:5173 · unités explicites dans chaque docstring" style="text;html=1;align=center;fontSize=12;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="56" width="1254" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- LÉGENDE -->
+        <mxCell id="leg" value="Légende" style="swimlane;fontStyle=1;align=center;startSize=22;fillColor=#FAFAFA;strokeColor=#666666;fontSize=11;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="92" width="1590" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="GET — lecture" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;fontStyle=1;" vertex="1" parent="leg">
+          <mxGeometry x="20" y="25" width="120" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="POST — calcul lourd / mutation" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;fontStyle=1;" vertex="1" parent="leg">
+          <mxGeometry x="155" y="25" width="200" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="Streaming SSE" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;fontStyle=1;" vertex="1" parent="leg">
+          <mxGeometry x="370" y="25" width="120" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" value="Endpoint critique (RGPD / patient)" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;fontStyle=1;" vertex="1" parent="leg">
+          <mxGeometry x="505" y="25" width="220" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" value="Suffixes d'unité utilisés : _min (minutes) · _pct (%, 0–100) · _rate (selon contexte) · count (entier)" style="text;fontSize=10;fontStyle=2;align=left;" vertex="1" parent="leg">
+          <mxGeometry x="745" y="27" width="800" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 1 : KPIs & Activité -->
+        <mxCell id="d1" value="Domaine — KPIs &amp; Activité" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#82B366;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="170" width="380" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_1" value="GET /api/kpis&#10;dossiers · patients · LOS p50/p90 · hospit_pct · period" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="38" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_2" value="GET /api/command-center&#10;payload Monitoring (KPIs · arrivals · LOS dist · goulots · sorties)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="84" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_3" value="GET /api/advanced-analytics&#10;flow_metrics · heatmap · weekday/monthly patterns · UHCD/SAUV" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="130" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_4" value="GET /api/arrivals-heatmap&#10;matrice 7 × 24 (jour de semaine × heure)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="176" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_5" value="GET /api/exit-modes&#10;modes de sortie groupés par fréquence" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="222" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_6" value="GET /api/readmissions&#10;readmission_7d_rate · readmission_30d_rate (en % 0–100)" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="268" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1_7" value="GET /api/insights&#10;narratives auto-générées (rule-based)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d1">
+          <mxGeometry x="10" y="314" width="360" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 2 : Process Mining -->
+        <mxCell id="d2" value="Domaine — Process Mining" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#82B366;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="170" width="380" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_1" value="GET /api/process-graph&#10;DFG · top 25 locations · count + avg_wait_min" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="38" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_2" value="GET /api/sankey&#10;flux des 3 premières étapes (4 colonnes)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="84" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_3" value="GET /api/top-variants&#10;parcours les plus fréquents (count · pct 0–100)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="130" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_4" value="GET /api/bottlenecks&#10;top 15 goulots · mean_min · median_min · p90_min" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="176" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_5" value="GET /api/conformance&#10;règles (IOA en début · BOX présent · ordre)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="222" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_6" value="GET /api/anomalies&#10;LOS &gt; μ+3σ ou variantes rares (&lt; 0.5%)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="268" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d2_7" value="GET /api/clusters&#10;K-means (k=3) sur TF-IDF des séquences" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d2">
+          <mxGeometry x="10" y="314" width="360" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 3 : Recherche statistique -->
+        <mxCell id="d3" value="Domaine — Recherche &amp; Statistiques" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#82B366;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="170" width="380" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_1" value="GET /api/research&#10;daily count + avg_los · clusters · scatter (k=4)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="38" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_2" value="GET /api/research/before-after&#10;Mann-Whitney U + Cohen's d sur split_date" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="84" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_3" value="GET /api/research/decomposition&#10;STL additive · trend + seasonal (7j) + residual" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="130" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_4" value="GET /api/research/kaplan-meier&#10;S(t) · stratifié weekday / weekend · IC 95%" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="176" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_5" value="GET /api/research/feature-importance&#10;Gini importance du modèle GBM LOS" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="222" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d3_6" value="(SPC Shewhart + CUSUM &amp; Binary Segmentation calculés côté frontend à partir de /api/research → daily.count)" style="rounded=1;fillColor=#FAFAFA;strokeColor=#666666;fontSize=9;align=left;fontStyle=2;" vertex="1" parent="d3">
+          <mxGeometry x="10" y="268" width="360" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 4 : ML & Simulation -->
+        <mxCell id="d4" value="Domaine — Prédiction ML &amp; Simulation" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#D79B00;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="170" width="380" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_1" value="POST /api/predict&#10;LOS · GBM × 3 (point + p10 + p90) · ordering enforced" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="38" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_2" value="GET /api/predict-options&#10;listes top_locations · exit_modes (training)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="84" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_3" value="POST /api/simulate&#10;SimPy DES · scénario unique ou Monte-Carlo" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="130" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_4" value="POST /api/simulate-trace&#10;trace détaillée (queues, waits, time-series, events)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="176" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_5" value="POST /api/real-trace&#10;rejoue les événements observés (mêmes stats)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="222" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_6" value="POST /api/pathway-next&#10;bigramme avec smoothing Jelinek-Mercer (λ=0.65)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="268" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d4_7" value="GET /api/dataset-range&#10;min/max date du CSV chargé" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d4">
+          <mxGeometry x="10" y="314" width="360" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 5 : Drill-down & Patient (RGPD critique) -->
+        <mxCell id="d5" value="Domaine — Drill-down patient (RGPD critique)" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#B85450;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="570" width="780" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_1" value="GET /api/patients&#10;recherche · LOS range · filtres globaux date / hour / exit_mode" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="10" y="38" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_2" value="GET /api/patient-journey?dossier_ids=...&#10;timeline complète relative à l'arrivée (start_min, end_min, duration_min)" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="10" y="84" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_3" value="GET /api/drilldown/by-location&#10;dossiers passant par un local · stats event-level" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="400" y="38" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_4" value="GET /api/drilldown/by-variant&#10;dossiers d'un parcours préfixe · stats case-level" style="rounded=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="400" y="84" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_5" value="GET /api/floor-plan&#10;coordonnées canvas (PAS de plan physique) · scale_m_per_unit" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="10" y="130" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d5_6" value="GET /api/flexsim-export&#10;ZIP : arrivals_by_hour · service_times · transitions" style="rounded=1;fillColor=#FAFAFA;strokeColor=#666666;fontSize=10;align=left;" vertex="1" parent="d5">
+          <mxGeometry x="400" y="130" width="370" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- DOMAINE 6 : LLM -->
+        <mxCell id="d6" value="Domaine — LLM local" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FFFFFF;strokeColor=#D6B656;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="570" width="780" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="d6_1" value="GET /api/llm-status&#10;ok · model · model_available · models[] (ping Ollama)" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;" vertex="1" parent="d6">
+          <mxGeometry x="10" y="38" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d6_2" value="POST /api/explain (text/event-stream)&#10;kind: rupture | avant_apres | briefing | general" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;" vertex="1" parent="d6">
+          <mxGeometry x="400" y="38" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d6_3" value="Format des événements SSE&#10;data: {token: '...'}    — 1 token&#10;data: {done: true}     — fin&#10;data: {error: '...'}   — échec" style="rounded=1;fillColor=#FFFCE6;strokeColor=#D6B656;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="d6">
+          <mxGeometry x="10" y="86" width="370" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d6_4" value="Variables d'environnement&#10;OLLAMA_URL    (défaut: http://localhost:11434)&#10;OLLAMA_MODEL  (défaut: qwen2.5:3b)" style="rounded=1;fillColor=#FFFCE6;strokeColor=#D6B656;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="d6">
+          <mxGeometry x="400" y="86" width="370" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d6_5" value="GET /  health-check minimal {service, status}" style="rounded=1;fillColor=#FAFAFA;strokeColor=#666666;fontSize=10;align=left;" vertex="1" parent="d6">
+          <mxGeometry x="10" y="172" width="760" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- BANDEAU FILTRES GLOBAUX -->
+        <mxCell id="filt" value="Filtres globaux acceptés sur la plupart des endpoints (via Depends(_filters_dep))&#10;date_from (ISO date) · date_to (ISO date) · exit_mode (string) · hour_from (0-23) · hour_to (0-23)" style="rounded=1;fillColor=#EFF8FF;strokeColor=#6C8EBF;fontSize=11;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="30" y="810" width="1590" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- COMPTEUR -->
+        <mxCell id="count" value="32 endpoints au total · 24 GET · 6 POST (calcul lourd) · 1 SSE streaming · 1 health-check" style="text;fontSize=11;fontColor=#1e293b;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="200" y="870" width="1254" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- FOOTER -->
+        <mxCell id="footer" value="Diagramme actualisé : 2026-04-29 · Cartographie post-audit (unités annotées dans chaque docstring main.py)" style="text;fontSize=9;fontColor=#94A3B8;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="900" width="1254" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

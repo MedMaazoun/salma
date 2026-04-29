@@ -1,8 +1,10 @@
 export function Skeleton({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-xl bg-slate-800/60 ${className}`}
-    />
+      className={`relative overflow-hidden rounded-xl bg-slate-800/50 ring-1 ring-slate-700/50 ${className}`}
+    >
+      <div className="absolute inset-0 skeleton-shimmer" />
+    </div>
   );
 }
 

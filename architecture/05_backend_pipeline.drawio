@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net" modified="2026-04-29T18:30:00.000Z" agent="ED-Flow" version="21.0.0" type="device">
+  <diagram name="Backend Pipeline + Modèles" id="backend-pipeline-v2">
+    <mxGraphModel dx="1700" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITRE -->
+        <mxCell id="t1" value="Backend — Pipeline d'ingestion + Modèles statistiques &amp; ML" style="text;html=1;align=center;fontSize=22;fontStyle=1;fontColor=#1e293b;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="1254" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="FastAPI · Python 3.9 · pandas · scikit-learn · SimPy · ~2 900 lignes · cache RAM unique au démarrage" style="text;html=1;align=center;fontSize=12;fontColor=#64748b;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="56" width="1254" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- LÉGENDE -->
+        <mxCell id="leg" value="Légende" style="swimlane;fontStyle=1;align=center;startSize=22;fillColor=#FAFAFA;strokeColor=#666666;fontSize=11;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="92" width="1590" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1" value="Étape startup (chargement unique)" style="rounded=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;" vertex="1" parent="leg">
+          <mxGeometry x="20" y="25" width="220" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2" value="Cache en RAM (Class Cache)" style="rounded=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=10;" vertex="1" parent="leg">
+          <mxGeometry x="250" y="25" width="200" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3" value="Modèle statistique" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;" vertex="1" parent="leg">
+          <mxGeometry x="460" y="25" width="160" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4" value="Machine Learning / Simulation" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;" vertex="1" parent="leg">
+          <mxGeometry x="630" y="25" width="220" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg5" value="Persona LLM" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;" vertex="1" parent="leg">
+          <mxGeometry x="860" y="25" width="160" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="leg6" value="Trait : flux de données ; trait pointillé : déclenchement à la demande" style="text;fontSize=10;align=left;fontStyle=2;" vertex="1" parent="leg">
+          <mxGeometry x="1030" y="27" width="540" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 1 : STARTUP -->
+        <mxCell id="z1" value="Phase 1 — Startup (@app.on_event(&quot;startup&quot;) + load())" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FAFAFA;strokeColor=#6C8EBF;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="170" width="780" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_1" value="(1) Lecture CSV&#10;pd.read_csv() avec sep=';'&#10;encoding='utf-8-sig'" style="rounded=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;align=left;" vertex="1" parent="z1">
+          <mxGeometry x="20" y="38" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_2" value="(2) _clean(df)&#10;parse datetimes (4 colonnes)&#10;duration_min = (fin - début) / 60&#10;dropna(DOSSIER_ID, location)" style="rounded=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;align=left;" vertex="1" parent="z1">
+          <mxGeometry x="265" y="38" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="z1_3" value="(3) _build_cases(df)&#10;groupby DOSSIER_ID&#10;sequence = tuple(locations)&#10;los_min = (sortie - arrivée)/60&#10;hour, day_of_week, month dérivés" style="rounded=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=10;align=left;" vertex="1" parent="z1">
+          <mxGeometry x="525" y="38" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z1_4" value="(4) _train_model()&#10;Sélection top 15 first_locations + top 8 exit_modes&#10;Encodage one-hot des features catégorielles&#10;Clip los_min à P99 (réduit l'effet outliers)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z1">
+          <mxGeometry x="20" y="110" width="485" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z1_5" value="(5) Entraînement de 3 GradientBoostingRegressor&#10;model       — loss: squared_error&#10;model_p10   — loss: quantile, α = 0.10&#10;model_p90   — loss: quantile, α = 0.90&#10;n_estimators=120 · max_depth=3 · lr=0.05" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z1">
+          <mxGeometry x="525" y="110" width="240" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Cache -->
+        <mxCell id="cache" value="Class Cache (singleton process-level)&#10;Cache.df : DataFrame des événements&#10;Cache.cases : DataFrame agrégé case-level&#10;Cache.model · model_p10 · model_p90&#10;Cache.top_locations · Cache.exit_mode_values&#10;Cache.residual_std · feature_cols" style="rounded=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=10;align=left;verticalAlign=top;fontStyle=1;" vertex="1" parent="z1">
+          <mxGeometry x="20" y="200" width="745" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 2 : MODÈLES STATS -->
+        <mxCell id="z2" value="Phase 2 — Modèles statistiques (à la demande sur /api/research/*)" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FAFAFA;strokeColor=#82B366;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="510" width="780" height="380" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_1" value="SPC — Cartes de Shewhart&#10;UCL = μ + 3σ · LCL = max(0, μ - 3σ)&#10;Zones d'alerte ±2σ&#10;Calcul côté frontend depuis daily.count" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="10" y="35" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_2" value="CUSUM bidirectionnel&#10;k = 0.5σ (allowance) · H = 5σ (decision)&#10;C+_i = max(0, C+_{i-1} + z_i - k)&#10;C-_i = max(0, C-_{i-1} - z_i - k)" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="390" y="35" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_3" value="Binary Segmentation (ruptures)&#10;t* = argmax_t [SSE_total - (SSE_left + SSE_right)]&#10;récursif, max 4 ruptures · seg_min = 7 jours&#10;sortie : dates de rupture + moyenne par segment" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="10" y="125" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_4" value="Mann-Whitney U + Cohen's d&#10;non-paramétrique (LOS skewed)&#10;z = (U - μ_U) / σ_U  ;  p_two = 2(1 - Φ(|z|))&#10;d = (μ_after - μ_before) / σ_pooled" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="390" y="125" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_5" value="Décomposition STL additive&#10;y_t = T_t + S_t + R_t (saisonnalité 7 jours)&#10;trend : moyenne mobile centrée&#10;seasonal : moyennage par jour de la semaine" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="10" y="215" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_6" value="Kaplan-Meier (survie LOS)&#10;S(t) = ∏ (1 - d_i / n_i)&#10;échantillonné 0/15/30/.../1440 minutes&#10;IC 95% binomial · médiane ; stratifié week/we" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="390" y="215" width="370" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z2_7" value="K-means + TF-IDF (clustering parcours)&#10;Vocab = top 30 locations&#10;Vecteurs TF-IDF · K-means k=3 (clusters) ou k=4 (research)&#10;Étiquetage automatique par avg_los croissant" style="rounded=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z2">
+          <mxGeometry x="10" y="305" width="750" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 3 : ML & SIMULATION -->
+        <mxCell id="z3" value="Phase 3 — ML &amp; Simulation (calculs lourds)" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FAFAFA;strokeColor=#D79B00;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="170" width="790" height="500" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z3_1" value="Prédiction LOS — POST /api/predict&#10;input : hour · day_of_week · month · first_location · exit_mode&#10;sortie : predicted_los_min · p10 · p90 (en minutes)&#10;Garantie p10 ≤ pred ≤ p90 (sorted post-traitement)&#10;Fallback : pred ± residual_std si modèles quantiles absents" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;fontStyle=1;" vertex="1" parent="z3">
+          <mxGeometry x="10" y="35" width="760" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z3_2" value="Pathway Next — POST /api/pathway-next&#10;Bigramme avec smoothing Jelinek-Mercer&#10;P(loc | seq[-1]) = λ · bigram + (1-λ) · unigram (λ=0.65)&#10;Sortie top 7 + entropie de Shannon (bits)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z3">
+          <mxGeometry x="10" y="145" width="760" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z3_3" value="Simulation SimPy DES — POST /api/simulate&#10;Arrivées : Processus de Poisson non-homogène (λ par heure de la journée)&#10;Service : durées exponentielles, paramètres µ par local empiriques&#10;Multi-postes M/M/c · routing matrice empirique (transitions observées)&#10;Knobs : extra_boxes · arrival_multiplier · ioa_speedup · duration_days&#10;Modes : scénario unique OU Monte-Carlo (n=10 réplications par scénario)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;fontStyle=1;" vertex="1" parent="z3">
+          <mxGeometry x="10" y="235" width="760" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="z3_4" value="Simulation détaillée — POST /api/simulate-trace&#10;Échantillonne queue_total / in_service_total toutes les 5 min&#10;Trace par-local : avg_queue_len · max_queue_len · p90_wait · pct_time_saturated&#10;Liste des événements (arrival · service_start · departure)" style="rounded=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="z3">
+          <mxGeometry x="10" y="365" width="760" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ZONE 4 : LLM PROXY -->
+        <mxCell id="z4" value="Phase 4 — Proxy LLM (Ollama → SSE)" style="swimlane;fontStyle=1;align=center;startSize=28;fillColor=#FAFAFA;strokeColor=#D6B656;fontSize=12;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="690" width="790" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="z4_1" value="POST /api/explain (StreamingResponse)&#10;1. Construit messages = [system + ctx JSON 6000 chars + user]&#10;2. httpx.AsyncClient.stream POST :11434/api/chat&#10;3. Itère NDJSON · reformatte en SSE: data: {token: '...'}\\n\\n&#10;4. Renvoie au front (text/event-stream) — Cache-Control: no-cache" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;verticalAlign=top;fontStyle=1;" vertex="1" parent="z4">
+          <mxGeometry x="10" y="35" width="760" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="z4_2" value="GET /api/llm-status — ping :11434/api/tags · liste modèles dispo · timeout 2 s" style="rounded=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;" vertex="1" parent="z4">
+          <mxGeometry x="10" y="142" width="760" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Connexions -->
+        <mxCell id="x1" style="endArrow=classic;html=1;strokeColor=#9673A6;strokeWidth=2;dashed=1;" edge="1" parent="1" source="z1" target="z2" />
+        <mxCell id="x1l" value="Cache utilisé par&#10;les calculs stats" style="text;fontSize=9;fontColor=#9673A6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="280" y="495" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="x2" style="endArrow=classic;html=1;strokeColor=#9673A6;strokeWidth=2;dashed=1;" edge="1" parent="1" source="z1" target="z3" />
+        <mxCell id="x2l" value="Modèles ML&#10;servis depuis Cache" style="text;fontSize=9;fontColor=#9673A6;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="730" y="345" width="170" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="x3" style="endArrow=classic;html=1;strokeColor=#D6B656;strokeWidth=2;dashed=1;" edge="1" parent="1" source="z3" target="z4" />
+        <mxCell id="x3l" value="Données contexte&#10;envoyées au LLM" style="text;fontSize=9;fontColor=#D6B656;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="675" width="160" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Note unités -->
+        <mxCell id="note" value="Conventions d'unités systématiques (chaque endpoint a ses unités annotées dans la docstring) :&#10;durées : minutes (suffixe _min)  ·  pourcentages : 0–100 (suffixe _pct ou _rate)  ·  probabilités : 0–1 (prob, weight, importance)&#10;dates : ISO string (naïves — Europe/Paris implicite)  ·  counts : entiers (suffixe _count, n_*)  ·  effet de taille : Cohen d (sans unité) · entropie : bits" style="rounded=1;fillColor=#EFF8FF;strokeColor=#6C8EBF;fontSize=10;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="30" y="910" width="1590" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- FOOTER -->
+        <mxCell id="footer" value="Diagramme actualisé : 2026-04-29 · Pipeline complet du backend ED Flow Intelligence" style="text;fontSize=9;fontColor=#94A3B8;align=center;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="200" y="985" width="1254" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
